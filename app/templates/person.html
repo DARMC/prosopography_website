@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block page_content %}
+
+<!-- Person description and attributes -->
+<div class ="container">
+  <div class="page-header">
+    <h2><span class="glyphicon glyphicon-user">{{attributes[1]}}</h2>
+    {% if attributes[-3] != '' %}
+      <h4><small>{{attributes[-3]}}</small></h4>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Description of offices and positions held -->
+<div class ="container">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-briefcase"></span> Offices </h3>
+      </div>
+
+
+        {% if offices != [] %}
+        <ul class="list-group">
+            {% for office in offices %}
+                <li class="list-group-item"><p><h4>{{office[3]}} {% if office[9] != '' %}({{office[9]}}){% endif %}</h4></p>
+                {% if office[-1] != '' %}
+                    <p><h6><em>{{office[-1]}}</em></h6></p></li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        {% else %}
+        <div class="panel-body">
+            There are currently no offices associated with {{ attributes [1] }}. If you think this is an error, please <a href="mailto:darmc@harvard.edu">contact us</a>
+        </div>
+        {% endif %}
+      
+    </div>
+</div>
+
+<div class="container">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-globe"></span> Map</h3>
+      </div>
+        <div class="panel-body">
+  <script type="text/javascript">
+    var map;
+    $(document).ready(function(){
+      map = new GMaps({
+        el: '#map',
+        lat: 40,
+        lng: 10,
+        zoom: 4,
+        zoomControl : true,
+        zoomControlOpt: {
+            style : 'SMALL',
+            position: 'TOP_LEFT'
+        },
+        panControl : false,
+        streetViewControl : false,
+        mapTypeControl: true,
+        overviewMapControl: false
+      });
+
+      map.drawPolyline({
+        path: {{ points }},
+        strokeColor: '#131540',
+        strokeOpacity: 1,
+        strokeWeight: 1
+      });
+
+      var markersAdded = false;
+      {% for place in movements %}
+      {% if place[8] != '' %}
+      map.addMarker({
+        lat: {{ place[8] }},
+        lng: {{ place[9] }},
+        infoWindow: {
+          content: '<div style="width: 150px; height: 20px" align="center">{{ place[7]}}. {{ place[4] }}</div>',
+          maxWidth: 320
+          }
+
+      });
+      markersAdded = true;
+      {% endif %}
+      {% endfor %}
+      console.log(markersAdded);
+      if (markersAdded === true) {
+        console.log("Fitting");
+        map.fitZoom();
+      };  
+    
+});
+  </script>
+  <div id="map"></div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Description of places -->
+<div class = "container">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-map-marker"></span> Places</h3>
+      </div>
+      <div class="panel-body">
+        <p></p>
+        {% if movements != [] %}
+            <table class="table table-hover">
+            <colgroup>
+                <col span="1" style="width: 3%">
+                <col span="1" style="width: 12%">
+                <col span="1" style="width: 5%">
+                <col span="1" style="width: 5%">
+                <col span="1" style="width: 10%">
+                <col span="1" style="width: 50%">
+                <col span="1" style="width: 15%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Place</th>
+                    <th>Arr.</th>
+                    <th>Dep.</th>
+                    <th>Travel Mode</th>
+                    <th>Activity</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+                {% for place in movements %}
+                <tr>
+                    <td align="right">{{place[7]}}</td>
+                    <td><a href="/places/{{place[4].replace(' ','_')}}" class="btn btn-info btn-sm" role="button">{{ place[4] }}</a></td>
+                    <td>{{place[15]}}</td>
+                    <td>{{place[29]}}</td>
+                    <td>{{place[14]}}</td>
+                    <td>{{place[13]}}</td>
+                    <td><a href={{place[-1]}}>View on Pelagios</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            There are currently no places associated with {{ attributes [1] }}. If you think this is an error, please <a href="mailto:darmc@harvard.edu">contact us</a>
+        {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+<!--References-->
+{% if attributes[-1] != '' %}
+<div class="container">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span class="glyphicon glyphicon-book"></span> References </h3>
+        </div>
+    <ul class="list-group">
+            {% for ref in references %}
+            <li class="list-group-item">{{ref}}</li>
+            {% endfor %}
+        </ul>   
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block page_content %}
+
+<!-- Places descriptions and attributes -->
+<div class="container">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<div class="panel-title">
+				<h3><span class="glyphicon glyphicon-map-marker"></span> {{ title }}</h3>
+			</div>
+		</div>
+		<div class="panel-body">
+{% if (plattrs[0][8] != '' and plattrs[0][9] != '') %}
+  <script type="text/javascript">
+    var map;
+    $(document).ready(function(){
+      map = new GMaps({
+        el: '#map',
+        lat: {{ plattrs[0][8] }},
+        lng: {{ plattrs[0][9] }},
+        zoom: 4,
+        zoomControl : true,
+        zoomControlOpt: {
+            style : 'SMALL',
+            position: 'TOP_LEFT'
+        },
+        panControl : false,
+        streetViewControl : false,
+        mapTypeControl: false,
+        overviewMapControl: false
+      });
+
+      map.addMarker({
+  		lat: {{ plattrs[0][8] }},
+  		lng: {{ plattrs[0][9] }},
+  		title: "{{ title }}"
+		});
+    });
+  </script>
+  <div id="map"></div>
+{% else %}
+{{title}} is currently unlocated. <a href="mailto:darmc@harvard.edu">Contribute information about the location of this place.</a>
+{% endif %}
+
+
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<div class="panel-title">
+				<h3><span class="glyphicon glyphicon-user"></span> Associated Travelers</h3>
+			</div>
+		</div>
+		<div class="panel-body">
+			{% for place in plattrs %}
+			<p><h4><strong><a href="/travelers/{{ place[-1] }}">{{ place[-1] }}</a> ({{ place[11]}}) </strong> <em><small> - {{ place[13] }} </small></em></h4></p>
+			{% endfor %}
+			
+		</div>
+</div>
+</div>
+<div class="container">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<div class="panel-title">
+				<h3><span class="glyphicon glyphicon-stats"></span> Statistics</h3>
+			</div>
+		</div>
+		<div class="panel-body">
+			<p>
+			<strong>{{ title }}</strong> was visited 
+			<strong>{{ numvisits }}</strong> 
+			{% if numvisits == 1 %} time {% else %} times {% endif %} by 
+			<strong> {{ numtravelers}} </strong> 
+			{% if numtravelers == 1 %} traveler. {% else %} travelers. {% endif %}
+			</p>
+			<p>
+			<strong>{{ title }}</strong> was most commonly visited by: </br>
+
+			</p>
+		</div>
+			
+</div>
+
+
+{% endblock %}

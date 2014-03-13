@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block page_content %}
+
+<!-- Places descriptions and attributes -->
+<div class="container">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<h3 class="panel-title"><span class="glyphicon glyphicon-globe"></span>Places</h3>
+		</div>
+		<div class="panel-body">
+			<table class="table">
+				<colgroup>
+					<col span="1" style="width: 15%">
+					<col span="1" style="width: 85%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th>Place</th>
+						<th>Associated Travelers</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for place in places %}
+					<tr>
+						<td><a href="/places/{{ place[0].replace(' ', '_') }}" class="btn btn-primary btn-sm" role="button">{{ place[0] }}</a></td>
+						<td>
+							{% for traveler in place[1] %}
+							<a href="/travelers/{{ traveler }}" class="btn btn-default btn-sm" role="button">{{ traveler }}</a>
+							{% endfor %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
