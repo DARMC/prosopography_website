@@ -17,15 +17,13 @@
       <div class="panel-heading">
         <h3 class="panel-title"><span class="glyphicon glyphicon-briefcase"></span> Offices </h3>
       </div>
-
-
-        {% if offices != [] %}
-        <ul class="list-group">
-            {% for office in offices %}
-                <li class="list-group-item"><p><h4>{{office[3]}} {% if office[9] != '' %}({{office[9]}}){% endif %}</h4></p>
-                {% if office[-1] != '' %}
-                    <p><h6><em>{{office[-1]}}</em></h6></p></li>
-                {% endif %}
+      {% if offices != [] %}
+      <ul class="list-group">
+          {% for office in offices %}
+              <li class="list-group-item"><p><h4>{{office[3]}} {% if office[9] != '' %}({{office[9]}}){% endif %}</h4></p>
+              {% if office[-1] != '' %}
+                <p><h6><em>{{office[-1]}}</em></h6></p></li>               
+              {% endif %}
             {% endfor %}
             </ul>
         {% else %}
@@ -43,55 +41,71 @@
         <h3 class="panel-title"><span class="glyphicon glyphicon-globe"></span> Map</h3>
       </div>
         <div class="panel-body">
-  <script type="text/javascript">
-    var map;
-    $(document).ready(function(){
-      map = new GMaps({
-        el: '#map',
-        lat: 40,
-        lng: 10,
-        zoom: 4,
-        zoomControl : true,
-        zoomControlOpt: {
-            style : 'SMALL',
-            position: 'TOP_LEFT'
-        },
-        panControl : false,
-        streetViewControl : false,
-        mapTypeControl: true,
-        overviewMapControl: false
-      });
+        <script type="text/javascript">
+          var map;
+          $(document).ready(function(){
+            map = new GMaps({
+              el: '#map',
+              lat: 40,
+              lng: 10,
+              zoom: 4,
+              zoomControl : true,
+              zoomControlOpt: {
+                style : 'SMALL', 
+                position: 'TOP_LEFT'
+              },
+              panControl : false,
+              streetViewControl : false,
+              mapTypeControl: true,
+              overviewMapControl: false
+            });
 
-      map.drawPolyline({
-        path: {{ points }},
-        strokeColor: '#131540',
-        strokeOpacity: 1,
-        strokeWeight: 1
-      });
+            map.addControl({
+              position: 'top_right',
+              content: 'Zoom Path',
+              style: {
+                margin: '5px',
+                padding: '1px 6px',
+                border: 'solid 1px #717B87',
+                background: '#fff'
+              },
+              events: {
+                click: function(){
+                  map.fitZoom();
+                }
+              }
+            });
 
-      var markersAdded = false;
-      {% for place in movements %}
-      {% if place[8] != '' %}
-      map.addMarker({
-        lat: {{ place[8] }},
-        lng: {{ place[9] }},
-        infoWindow: {
-          content: '<div style="width: 150px; height: 20px" align="center">{{ place[7]}}. {{ place[4] }}</div>',
-          maxWidth: 320
-          }
+            map.drawPolyline({
+              path: {{ points }},
+              strokeColor: '#131540',
+              strokeOpacity: 1,
+              strokeWeight: 2
+            });
 
-      });
-      markersAdded = true;
-      {% endif %}
-      {% endfor %}
-      console.log(markersAdded);
-      if (markersAdded === true) {
-        console.log("Fitting");
-        map.fitZoom();
-      };  
-    
-});
-  </script>
+            var markersAdded = false;
+            {% for place in movements %}
+              {% if place[8] != '' %}
+                map.addMarker({
+                  lat: {{ place[8] }},
+                  lng: {{ place[9] }},
+                  icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld={{ place[7] }}|FE6256|000000",
+                  infoWindow: {
+                    content: '<div style="width: 150px; height: 20px" align="center">{{ place[7] }}. {{ place[4] }}</div>',
+                    maxWidth: 320
+                    }
+                });
+                /* as long as one marker has been added, markersAdded will be true
+                   and the map will be zoomed to the travelers extent */
+                markersAdded = true;
+              {% endif %}
+            {% endfor %}
+
+            if (markersAdded === true) {
+              map.fitZoom();
+            };    
+          });
+        </script>
   <div id="map"></div>
 
         </div>

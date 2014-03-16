@@ -3,6 +3,7 @@ import sqlite3 as sqlite
 from flask import render_template, abort
 import unicodecsv as csv
 from collections import OrderedDict
+import json
 
 # Uncomment to run App on Python Anywhere
 #from flask import Flask 
@@ -11,6 +12,14 @@ from collections import OrderedDict
 #DATABASE = '/home/bmaionedowning/mysite/travelers.sqlite'
 
 DATABASE = 'travelers.sqlite' #comment out to run on PyAW
+
+def query_travelers_database(query):
+	conn = sqlite.connect(DATABASE)
+	c = conn.cursor()
+	travelers = c.execute(query).fetchall()
+	conn.close()
+
+	return travelers
 
 # Splash page
 @app.route('/')
@@ -22,44 +31,46 @@ def index():
 # Travelers index
 @app.route('/travelers/')
 def travelers():
-	conn = sqlite.connect(DATABASE)
-	c = conn.cursor()
-	travelers = c.execute("""SELECT Name, BirthDate, DeathDate, Notes, Bibliography FROM people""").fetchall()
-	conn.close()
+	# query information about all travelers
+	travelers = query_travelers_database("""SELECT Name, BirthDate, DeathDate, Blurb, Bibliography FROM people""")
+
 	# if no travelers are returned, something is wrong with the database
 	if len(travelers) == 0:
 		abort(500)
+	# otherwise convert into a serialized format
+	else:
+		output = [{'number': i, 'name': t[0], 'birthDate': t[1], 'deathDate': t[2], 'notes': t[3],
+			'bibliography': t[4]} for i, t in enumerate(travelers)]
+
 	return render_template("travelers.html",
 		title = 'Mediterranean Travlers',
-		travelers = travelers)
+		travelers = output)
 
 # Render automatic templates for individual travelers
 @app.route('/travelers/<name>')
 def traveler(name):
 	conn = sqlite.connect(DATABASE)
 	c = conn.cursor()
+	
 	try:
-		attributes = c.execute("""SELECT * FROM people WHERE Name = ?""", (name,)).fetchall()
-		attributes = attributes[0]
+		attributes = c.execute("""SELECT * FROM people WHERE Name = ?""", (name,)).fetchall()[0]
 		movements = c.execute("""SELECT * FROM places WHERE PersonID = ? ORDER BY PlaceOrder""", (attributes[0],)).fetchall()
 		offices = c.execute("""SELECT * FROM offices WHERE PersonID = ?""", (attributes[0],)).fetchall()
-		points_array = []
-		for movement in movements:
-			if movement[8] != '' and movement[9] != '':
-				points_array.append([movement[8], movement[9]])
+		points = [[m[8], m[9]] for m in movements if m[8] != '' and m[9] != '']
 
-
-		return render_template("person.html",
-			title = attributes[1],
-			points = points_array,
-			attributes = attributes,
-			references = attributes[-1].split(';'),
-			offices = offices,
-			movements = movements,
-			numoffice = len(offices),
-			numplace = len(movements))
 	except IndexError:
 		abort(404)
+
+	return render_template("person.html",
+		title = attributes[1],
+		points = points,
+		attributes = attributes,
+		references = attributes[-1].split(';'),
+		offices = offices,
+		movements = movements,
+		numoffice = len(offices),
+		numplace = len(movements))
+
 
 # Render list of all places
 @app.route('/places/')
