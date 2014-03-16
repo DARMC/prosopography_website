@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>{{ title }}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- got mad includes yo! -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'css/bootstrap.min.css') }}">
-  <script type="text/javascript" src="{{ url_for('static', filename = 'js/bootstrap.min.js') }}"></script>
+  <title>{{ title }}</title>
+
+  <!-- include foundation css and icons -->
+  <link rel="stylesheet" href="{{url_for('static', filename='css/foundation.css') }}" />
+  <link rel="stylesheet" href="{{url_for('static', filename='css/foundation-icons.css') }}" />
+
+  <!-- include javascript libraries-->
+  <script src="{{ url_for('static', filename = 'js/vendor/modernizr.js') }}"></script>
+  <script src="{{ url_for('static', filename = 'js/vendor/jquery.js') }}"></script>
+  <script src="{{ url_for('static', filename = 'js/vendor/fastclick.js') }}"></script>
+  <script src="{{ url_for('static', filename = 'js/foundation.min.js') }}"></script>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
   <script type="text/javascript" src="{{ url_for('static', filename = 'js/gmaps.js') }}"></script>
+
+  <!-- initialize foundation jquery -->
+  <script>
+    $(document).foundation();
+  </script>
 
   <!-- this is magic and makes the maps work, I have no idea how. Thanks, StackOverflow! -->
   <style>
@@ -30,28 +41,37 @@
     }
   </style>
 </head>
+
 <body>
-  <!-- Fixed navbar -->
-  <div class="navbar navbar-default navbar-static-top" role="navigation">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="/">DARMCProsopography</a>
-      </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li><a href="/travelers">Travelers</a></li>
-          <li><a href="/places">Places</a></li>
-          <li><a href="/links">Links</a></li>
+  <nav class="top-bar" data-topbar>
+  <ul class="title-area">
+    <li class="name">
+      <h1><a href="/index">DARMCProsopography</a></h1>
+    </li>
+    <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+  </ul>
+
+  <section class="top-bar-section">
+    <!-- Right Nav Section -->
+    <ul class="right">
+      <li class="has-dropdown">
+        <a href="#">Account</a>
+        <ul class="dropdown">
+          <li><a href="/user">My Account</a></li>
+          <li><a href="/signup">New Account</a></li>
         </ul>
-      </div>
-    </div>
-  </div>
+      </li>
+    </ul>
+
+    <!-- Left Nav Section -->
+    <ul class="left">
+      <li><a href="/travelers"><i class="fi-torsos"></i>  Travelers</a></li>
+      <li><a href="/places"><i class="fi-compass"></i>  Places</a></li>
+      <li><a href="/search"><i class="fi-magnifying-glass"></i>  Search</a></li>
+      <li><a href="/links"><i class="fi-link"></i>  Links</a></li>      
+    </ul>
+  </section>
+</nav>
 
   <!-- All the real page content goes here -->
   {% block page_content %}
@@ -64,14 +84,16 @@
     </em></small></h4>
   </div>
   <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-48919001-1', 'pythonanywhere.com');
-  ga('send', 'pageview');
-
+    ga('create', 'UA-48919001-1', 'pythonanywhere.com');
+    ga('send', 'pageview');
+  </script>
+  <script>
+  $(document).foundation();
 </script>
 </body>
 </html>

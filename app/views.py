@@ -32,7 +32,7 @@ def index():
 @app.route('/travelers/')
 def travelers():
 	# query information about all travelers
-	travelers = query_travelers_database("""SELECT Name, BirthDate, DeathDate, Blurb, Bibliography FROM people""")
+	travelers = query_travelers_database("""SELECT Name, BirthDate, DeathDate, Blurb, Bibliography FROM people ORDER BY Name""")
 
 	# if no travelers are returned, something is wrong with the database
 	if len(travelers) == 0:

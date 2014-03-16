@@ -7,43 +7,23 @@
 			} 
 		</style>
 
-		<!--traveler table-->
-		<div class="container">
-			<p><h2>Index of Travelers <small>(Click for references)</small></h2></p>
+<!-- page title content -->
+<div class="row">
+  <div class = "large-10 large-centered columns">
+		<p><h2>Index of Travelers</h2></p>
+		<hr>
+	</div>
+</div>
+
+{% for t in travelers %}
+<div class="row">
+  <div class = "large-10 large-centered columns">
+		<div class="panel radius">
+  		<h4><i class="fi-torso"></i> <a href="/travelers/{{ t.name }}">{{ t.name }}</a> <small>({{t.birth}} - {{t.death}})</small></h4>
+  		<p>{{ t.notes }}</p>
 		</div>
-    <div class="container">
-    	<p></p>
-		<table class="table table-hover" style="border-collapse:collapse;">
-		<colgroup>
-			<col span="1" style="width: 15%">
-			<col span="1" style="width: 10%">
-			<col span="1" style="width: 10%">
-			<col span="1" style="width: 65%">
-		</colgroup>
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Birth</th>
-				<th>Death</th>
-				<th>Notes</th>
-			</tr>
-		</thead>
-			{% for t in travelers %}
-			<tr data-toggle="collapse", data-target="#hiderow{{ t.number }}" class="accordion-toggle">
-				<td><a href="/travelers/{{ t.name }}">{{ t.name }}</a></td>
-				<td><h6>{{ t.birthDate }}</h6></td>
-				<td>{{ t.deathDate }}</td>
-				<td><h6>{{ t.notes }}</h6></td>
-			</tr>
-			<tr>
-				<td colspan="4" class="hiddenRow">
-					<div class="accordian-body collapse" id="hiderow{{ t.number }}">
-						<h5><em><small>{{ t.bibliography }}<small></em></h5>
-					</div>
-				</td>
-			</tr>
-	 		{% endfor %}
-	 	</table>
-	 	</div>
+	</div>
+</div>
+{% endfor %}
 
 {% endblock %}
