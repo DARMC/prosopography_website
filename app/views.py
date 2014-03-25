@@ -1,6 +1,6 @@
 from app import app #comment out to run on PyAW
 import sqlite3 as sqlite
-from flask import render_template, abort, jsonify, make_response
+from flask import render_template, abort, jsonify, make_response, request
 from collections import OrderedDict
 import json
 import random
@@ -77,10 +77,10 @@ def places():
     conn = sqlite.connect(DATABASE)
     c = conn.cursor()
     places = c.execute("""SELECT places.*, people.Name 
-    	                  FROM places 
-    	                  LEFT JOIN people 
-    	                  ON places.PersonId = people.PersonID 
-    	                  ORDER BY places.PlaceName """).fetchall()  
+                          FROM places 
+                          LEFT JOIN people 
+                          ON places.PersonId = people.PersonID 
+                          ORDER BY places.PlaceName """).fetchall()  
     pldict = OrderedDict()
     for place in places:
         if place[4] not in pldict:
@@ -105,11 +105,11 @@ def place(place):
     print destripped_place
     try:
         plattrs = c.execute("""SELECT places.*, people.Name 
-        					   FROM places 
-        					   LEFT JOIN people 
-        					   ON places.PersonId = people.PersonID 
-        					   WHERE places.PlaceNameCln = ? 
-        					   ORDER BY places.PlaceNameCln""", (destripped_place,)).fetchall()
+                               FROM places 
+                               LEFT JOIN people 
+                               ON places.PersonId = people.PersonID 
+                               WHERE places.PlaceNameCln = ? 
+                               ORDER BY places.PlaceNameCln""", (destripped_place,)).fetchall()
         print plattrs
         conn.close()
         if len(plattrs) == 0:
@@ -129,22 +129,78 @@ def links():
     return render_template("links.html",
         title = 'Links')
 
+@app.route('/search/', methods = ['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        query = request.form['searchBox']
+        conn = sqlite.connect(DATABASE)
+        c = conn.cursor()
+        place_results = c.execute("""SELECT * FROM places
+                                      WHERE PlaceNameCln LIKE ?
+                                      GROUP BY places.PlaceNameCln
+                                      ORDER BY places.PlaceNameCln""", ('%'+query+'%',)).fetchall()
+
+        person_results = c.execute("""SELECT * FROM people
+                                      WHERE Name LIKE ?
+                                      ORDER BY Name""", ('%'+query+'%',)).fetchall()
+        
+        return render_template("search_results.html",
+            place_candidates = place_results,
+            person_candidates = person_results,
+            title = query)
+
+    else:
+        return render_template("search.html",
+            title = 'Search')
+
 #api description/documentation page
 @app.route('/api/v1/')
+@app.route('/API/v1/')
 def api_splash():
     return render_template("api_splash.html",
         title = 'DARMC Prosopography API')
 
 @app.route('/api/v1/places/<place>', methods = ['GET'])
 def place_api(place):
-	conn = sqlite.connect(DATABASE)
-	c = conn.cursor()
-
-	search_result = c.execute("""SELECT *
-	   							 FROM places
-	   							 WHERE PlaceName = ?""", (place,)).fetchall()
-	
-    return jsonify({'place': 'yes, this is a place', 'lat': 0,'lng': 0})
+    conn = sqlite.connect(DATABASE)
+    c = conn.cursor()
+    plup = place.upper()
+    search_result = c.execute("""SELECT *
+                                 FROM places
+                                 WHERE upper(PlaceName) = ?""", (plup,)).fetchall()
+    
+    final_results = []
+    for r in search_result:
+        final_results.append({
+            'PlaceID': r[0],
+            'PersonID': r[1],
+            'OfficeID': r[2],
+            'Attributes': {
+                'PlaceName': r[3],
+                'PlaceNameCln': r[4],
+                'PlaceSecondary': r[5],
+                'PlaceCertainty': r[6],
+                'PlaceOrder': r[7],
+                'PlaceLat': r[8],
+                'PlaceLng': r[9],
+                'Centroid': r[10]
+                },
+            'Activity Detail': {
+                'ActivityCat': r[11],
+                'ActivityQ': r[12],
+                'ActivityDsc': r[13],
+                'ArrMode': r[14],
+                'ArrDecimal': r[15],
+                'ArrYear': r[16],
+                'DepDecimal': r[17],
+                'DepYear': r[18]           
+                },
+            'PelagiosLink': r[19]
+            })
+    if len(final_results) == 0:
+        return json.dumps({'error':'No results returned for query {}'.format(place)})
+    else:
+        return json.dumps(final_results)
 
 ########## ERROR HANDLERS ############
 @app.errorhandler(404)

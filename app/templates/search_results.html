@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block page_content %}
+
+<div class="row">
+  <div class="large-8 large-centered columns text-center">
+  </br></br>
+  <h2> Search Results </h2>
+  <hr>
+  </div>
+</div>
+
+<!-- people -->
+<div class="row">
+  <div class="large-8 large-centered columns">
+  <h4> People </h4></br>
+  </div>
+</div>
+{% for p in person_candidates %}
+<div class="row">
+  <div class="large-8 large-centered columns">
+    <h5><a href='/travelers/{{ p[1] }}'>{{ p[1]}}</a> - {{p[17]}}</h5>
+  </div>
+</div>
+{% endfor %}
+
+<!--places -->
+<div class="row">
+  <div class="large-8 large-centered columns">
+  <h4> Places </h4></br>
+  </div>
+</div>
+{% for c in place_candidates %}
+<div class="row">
+  <div class="large-8 large-centered columns">
+    <h5><a href="/places/{{ c[4].replace(' ', '_') }}"> {{ c[4] }} </a> ({{ c[8]}}, {{c[9]}})</h5>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

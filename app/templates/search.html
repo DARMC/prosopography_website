@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block page_content %}
+  <form action="/search/" method="POST" name="query">
+  <div class="row">
+    </br></br>
+    <div class="large-6 large-centered columns">
+      <label> <h1 align="center"> Search </br></h1>
+        <input name="searchBox" type="text" placeholder="Search for a person or place" />
+      </label>
+    </div>
+  </div>
+  </form>
+
+{% endblock %}

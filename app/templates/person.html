@@ -14,33 +14,10 @@
   </div>
 </div>
 
-<!-- Description of offices and positions held -->
-<div class="row">
-  <div class="large-8 large-centered columns text-center">
-    <h3> Offices </h3>
-  </div>
-</div>
+<!-- map!! -->
 
 <div class="row">
-  <div class="large-8 large-centered columns">
-  {% if offices != [] %}
-    {% for office in offices %}
-      <p><h4>{{office[3]}} {% if office[9] != '' %}({{office[9]}}){% endif %}</h4></p>
-      {% if office[-1] != '' %}
-        <p><h6><em>{{office[-1]}}</em></h6></p></li>               
-      {% endif %}
-    {% endfor %} 
-  {% else %}
-    <p>There are currently no offices associated with {{ attributes [1] }}. If you think this is an error, please <a href="mailto:darmc@harvard.edu">contact us</a></p>
-  {% endif %}
-  </div>
-</div>
-
-<div class="container">
-    <div class="panel panel-info">
-      <div class="panel-heading">
-        <h3 class="panel-title"><span class="glyphicon glyphicon-globe"></span> Map</h3>
-      </div>
+    <div class="large-10 large-centered columns">
         <div class="panel-body">
         <script type="text/javascript">
           var map;
@@ -79,7 +56,7 @@
 
             map.drawPolyline({
               path: {{ points }},
-              strokeColor: '#131540',
+              strokeColor: 'red',
               strokeOpacity: 1,
               strokeWeight: 2
             });
@@ -113,13 +90,40 @@
     </div>
 </div>
 
+
+<!-- Description of offices and positions held -->
+<div class="row">
+  <div class="large-8 large-centered columns text-center">
+    <h3> Offices </h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-10 large-centered columns">
+  {% if offices != [] %}
+    {% for office in offices %}
+      <p><h6>{{office[3]}} {% if office[9] != '' %}({{office[9]}}){% endif %}</h6></p>
+      {% if office[-1] != '' %}
+        <p><h6><em>{{office[-1]}}</em></h6></p></li>               
+      {% endif %}
+    {% endfor %} 
+  {% else %}
+    <p>There are currently no offices associated with {{ attributes [1] }}. If you think this is an error, please <a href="mailto:darmc@harvard.edu">contact us</a></p>
+  {% endif %}
+  </div>
+</div>
+
+
 <!-- Description of places -->
-<div class = "container">
-    <div class="panel panel-info">
-      <div class="panel-heading">
-        <h3 class="panel-title"><span class="glyphicon glyphicon-map-marker"></span> Places</h3>
-      </div>
-      <div class="panel-body">
+
+<div class="row">
+  <div class="large-8 large-centered columns text-center">
+    <h3> Places </h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-10 large-centered columns">
         <p></p>
         {% if movements != [] %}
             <table class="table table-hover">
@@ -151,7 +155,7 @@
                     <td>{{place[29]}}</td>
                     <td>{{place[14]}}</td>
                     <td>{{place[13]}}</td>
-                    <td><a href={{place[-1]}}>View on Pelagios</a></td>
+                    <td><a href={{place[-1]}}>Search on Pelagios</a></td>
                 </tr>
                 {% endfor %}
             </table>
@@ -164,7 +168,7 @@
 
 </div>
 </div>
-</div
+</div>
 
 <!--References-->
 <div class="row">
@@ -173,17 +177,13 @@
   </div>
 </div>
 {% if attributes[-1] != '' %}
-<div class="row">
-  <div class="large-8 large-centered columns">
+  <div class="row">
+    <div class="large-10 large-centered columns">
     {% for ref in references %}
-    {{ref}}
+      <h6>{{ref}}</h6>
     {% endfor %}
-  </div>
-</div>
-
-</br>
-</br>
-</br>
+    </div>
+  </div></br></br></br>
 {% endif %}
 
 {% endblock %}

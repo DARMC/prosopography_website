@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block page_content %}
+
+<!-- title -->
+<div class="row">
+  <div class="large-11 large-centered columns text-center">
+    </br>
+    <h3>PROSOPOGRAPHY OF TRAVELERS DATA API</h3>
+    </br>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-11 large-centered columns">
+    <p>The Digital Atlas of Roman and Medieval Civilizations is proud to provide a an API for for the Prosopography of Mediterranean Travelers that will allow you to integrate the data into your own projects freely. As it is developed, the API will allow queries by traveler, date, and place and return JSON objects from the current state of the database. The API currently gives responses to two types of URI queries.</p>
+    <dl>
+      <dt>../api/v1/places/[place name]</dt>
+      <dd>Returns a list of JSON objects for [place name], where place name is any string corresponding to a place in the travelers database (case insensitive). For place names consisting of multiple words, words should be separated by an underscore.</dd>
+
+      <dt>../api/v1/traveler/[traveler name]</dt>
+      <dd><p>Returns a list of JSON objects for [traveler name], where traveler name is any string corresponding to an individual in the traelers database (case insensitive). For each traveler matching [traveler name], an ordered list of JSON objects is returned, containing that traveler's known movements. For names consisting of multiple words, words should be separated by an underscore.</p>
+      
+      <p><strong>Note:</strong> DARMC expressly prohibits the use of this API feature to create a complete copy of the travelers
+      table. Please contact us personally if you would like to use a complete copy of this data in your research.
+      </p></dd>
+    </dl>
+  </div>
+</div>
+
+{% endblock %}
