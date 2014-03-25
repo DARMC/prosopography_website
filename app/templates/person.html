@@ -2,37 +2,38 @@
 {% block page_content %}
 
 <!-- Person description and attributes -->
-<div class ="container">
-  <div class="page-header">
-    <h2><span class="glyphicon glyphicon-user">{{attributes[1]}}</h2>
+
+<div class="row">
+  <div class="large-8 large-centered columns text-center">
+    </br>
+    <h3>{{ attributes[1] }}</h3>
     {% if attributes[-3] != '' %}
       <h4><small>{{attributes[-3]}}</small></h4>
     {% endif %}
+    <hr>
   </div>
 </div>
 
 <!-- Description of offices and positions held -->
-<div class ="container">
-    <div class="panel panel-info">
-      <div class="panel-heading">
-        <h3 class="panel-title"><span class="glyphicon glyphicon-briefcase"></span> Offices </h3>
-      </div>
-      {% if offices != [] %}
-      <ul class="list-group">
-          {% for office in offices %}
-              <li class="list-group-item"><p><h4>{{office[3]}} {% if office[9] != '' %}({{office[9]}}){% endif %}</h4></p>
-              {% if office[-1] != '' %}
-                <p><h6><em>{{office[-1]}}</em></h6></p></li>               
-              {% endif %}
-            {% endfor %}
-            </ul>
-        {% else %}
-        <div class="panel-body">
-            There are currently no offices associated with {{ attributes [1] }}. If you think this is an error, please <a href="mailto:darmc@harvard.edu">contact us</a>
-        </div>
-        {% endif %}
-      
-    </div>
+<div class="row">
+  <div class="large-8 large-centered columns text-center">
+    <h3> Offices </h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-8 large-centered columns">
+  {% if offices != [] %}
+    {% for office in offices %}
+      <p><h4>{{office[3]}} {% if office[9] != '' %}({{office[9]}}){% endif %}</h4></p>
+      {% if office[-1] != '' %}
+        <p><h6><em>{{office[-1]}}</em></h6></p></li>               
+      {% endif %}
+    {% endfor %} 
+  {% else %}
+    <p>There are currently no offices associated with {{ attributes [1] }}. If you think this is an error, please <a href="mailto:darmc@harvard.edu">contact us</a></p>
+  {% endif %}
+  </div>
 </div>
 
 <div class="container">
@@ -161,22 +162,28 @@
     </div>
 </div>
 
-
+</div>
+</div>
+</div
 
 <!--References-->
-{% if attributes[-1] != '' %}
-<div class="container">
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h3 class="panel-title"><span class="glyphicon glyphicon-book"></span> References </h3>
-        </div>
-    <ul class="list-group">
-            {% for ref in references %}
-            <li class="list-group-item">{{ref}}</li>
-            {% endfor %}
-        </ul>   
-    </div>
+<div class="row">
+  <div class="large-8 large-centered columns text-center">
+    <h3> References </h3>
+  </div>
 </div>
+{% if attributes[-1] != '' %}
+<div class="row">
+  <div class="large-8 large-centered columns">
+    {% for ref in references %}
+    {{ref}}
+    {% endfor %}
+  </div>
+</div>
+
+</br>
+</br>
+</br>
 {% endif %}
 
 {% endblock %}
